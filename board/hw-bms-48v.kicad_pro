@@ -48,8 +48,22 @@
           "min_clearance": 0.5
         }
       },
-      "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
+      "drc_exclusions": [
+        "drill_out_of_range|104000000|81000000|710975f0-2d3d-4bf6-a2cb-ab6248fa599e|00000000-0000-0000-0000-000000000000",
+        "drill_out_of_range|104000000|82900000|a0166b11-b460-4223-b159-74c62123d6d9|00000000-0000-0000-0000-000000000000",
+        "drill_out_of_range|105350000|81000000|3276b5cb-b8eb-4bd7-9330-c03c805840d4|00000000-0000-0000-0000-000000000000",
+        "drill_out_of_range|105350000|82900000|6740eedb-90dd-4e6e-ab7e-3f01e1021077|00000000-0000-0000-0000-000000000000",
+        "drill_out_of_range|106700000|81000000|bf57a85b-a500-4f15-827e-737d68f46ba6|00000000-0000-0000-0000-000000000000",
+        "drill_out_of_range|106700000|82900000|922c4b6e-6577-4aa4-b381-8339cb70ba0e|00000000-0000-0000-0000-000000000000",
+        "starved_thermal|105985000|79300000|5d253a49-f438-4779-9d3b-f2def3cfee5f|ff088fbb-55da-48b6-90ca-38b623e30192|F.Cu"
+      ],
       "meta": {
         "version": 2
       },
@@ -165,8 +179,15 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
-      "via_dimensions": [],
+      "track_widths": [
+        0.0
+      ],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "layer_presets": [],
@@ -177,11 +198,7 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [
-      "power_pin_not_driven|1397000|1435100|977b727a-11ac-4e9c-86f1-76164a92861b|00000000-0000-0000-0000-000000000000|||",
-      "power_pin_not_driven|584200|1435100|5da1f0b9-6e75-4ccc-8992-1a27fcd1cd80|00000000-0000-0000-0000-000000000000|||",
-      "power_pin_not_driven|660400|1638300|8699bb56-126d-45a3-bcf5-f493864a4db2|00000000-0000-0000-0000-000000000000|||"
-    ],
+    "erc_exclusions": [],
     "meta": {
       "version": 0
     },
@@ -413,7 +430,7 @@
         "name": "Default",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.25,
+        "track_width": 0.4,
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
@@ -439,6 +456,57 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_fmt_presets": [],
+    "bom_fmt_settings": {
+      "field_delimiter": ",",
+      "keep_line_breaks": false,
+      "keep_tabs": false,
+      "name": "CSV",
+      "ref_delimiter": ",",
+      "ref_range_delimiter": "",
+      "string_delimiter": "\""
+    },
+    "bom_presets": [],
+    "bom_settings": {
+      "exclude_dnp": false,
+      "fields_ordered": [
+        {
+          "group_by": false,
+          "label": "Reference",
+          "name": "Reference",
+          "show": true
+        },
+        {
+          "group_by": true,
+          "label": "Value",
+          "name": "Value",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Datasheet",
+          "name": "Datasheet",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Footprint",
+          "name": "Footprint",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Qty",
+          "name": "Quantity",
+          "show": true
+        }
+      ],
+      "filter_string": "",
+      "group_symbols": true,
+      "name": "Grouped By Value",
+      "sort_asc": true,
+      "sort_field": "Reference"
+    },
     "drawing": {
       "dashed_lines_dash_length_ratio": 12.0,
       "dashed_lines_gap_length_ratio": 3.0,

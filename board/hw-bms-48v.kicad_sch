@@ -1,4 +1,4 @@
-(kicad_sch (version 20230121) (generator eeschema)
+(kicad_sch (version 20230409) (generator eeschema)
 
   (uuid acc91bfd-f3e2-4474-a962-d4ec26b06dd0)
 
@@ -1125,9 +1125,6 @@
   (junction (at 106.68 151.13) (diameter 0) (color 0 0 0 0)
     (uuid 95806a92-2203-45ff-8a28-bc8bec91bb5c)
   )
-  (junction (at 179.07 95.25) (diameter 0) (color 0 0 0 0)
-    (uuid 98ac2dda-a786-4094-88f2-55f849be4bfd)
-  )
   (junction (at 125.73 76.2) (diameter 0) (color 0 0 0 0)
     (uuid 9b2c70e9-0aa7-4f90-82f1-cc850ba6bbc9)
   )
@@ -1136,9 +1133,6 @@
   )
   (junction (at 158.75 143.51) (diameter 0) (color 0 0 0 0)
     (uuid bab17720-933a-46fa-8385-e8b01ee1eb25)
-  )
-  (junction (at 189.23 95.25) (diameter 0) (color 0 0 0 0)
-    (uuid be9a9c89-3503-4986-83ed-869ee10a5fab)
   )
   (junction (at 48.26 143.51) (diameter 0) (color 0 0 0 0)
     (uuid c3638643-1d2c-4e2f-99e3-f85799d2f41f)
@@ -1283,10 +1277,6 @@
     (stroke (width 0) (type default))
     (uuid 64b703dd-e593-4d8f-9f4d-ad4e95572277)
   )
-  (wire (pts (xy 179.07 95.25) (xy 189.23 95.25))
-    (stroke (width 0) (type default))
-    (uuid 66fa6ce1-b3d9-40ce-8806-2f7729cb722d)
-  )
   (wire (pts (xy 106.68 143.51) (xy 124.46 143.51))
     (stroke (width 0) (type default))
     (uuid 67feba00-b01b-4659-b3b3-f476b3535307)
@@ -1359,17 +1349,9 @@
     (stroke (width 0) (type default))
     (uuid b7274a3a-ce20-4308-aab8-8d08e7f790b6)
   )
-  (wire (pts (xy 172.72 95.25) (xy 179.07 95.25))
-    (stroke (width 0) (type default))
-    (uuid b7f0a7cc-cf62-4d02-bcf9-fa760e7f62de)
-  )
   (wire (pts (xy 68.58 138.43) (xy 68.58 135.89))
     (stroke (width 0) (type default))
     (uuid b92f6e62-e4dd-48ee-9266-97deecb65f27)
-  )
-  (wire (pts (xy 189.23 95.25) (xy 195.58 95.25))
-    (stroke (width 0) (type default))
-    (uuid c3aa6c0e-544c-4a43-a0a3-6f1d00a0b923)
   )
   (wire (pts (xy 101.6 104.14) (xy 125.73 104.14))
     (stroke (width 0) (type default))
@@ -1424,12 +1406,26 @@
     (uuid f1676b96-b0df-4678-b2c8-42d06c85f706)
   )
 
-  (text "RED - 5V\nWHITE - Vref\nYELLOW - Vout\nBLACK - GND\nSHIELD"
+  (text "next version fixes:\n- C1 - replace by 4pcs 10uF/50V 1206\n- Horizontal trimmer" (exclude_from_sim no)
+
+    (at 26.67 109.22 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 17c50b53-c742-4e0d-a2ee-e951933aabfc)
+  )
+  (text "The IC seems to be regulating to 840mV instead of expected 1V.\n5V is then acheived by changing R5 to 3.9k." (exclude_from_sim no)
+
+    (at 82.55 187.96 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 40747327-f759-4b4e-9438-d9c806b260af)
+  )
+  (text "RED - 5V\nWHITE - Vref\nYELLOW - Vout\nBLACK - GND\nSHIELD" (exclude_from_sim no)
+
     (at 93.98 74.93 0)
     (effects (font (size 1.5 1.5)) (justify right bottom))
     (uuid 7d16b48e-a1a5-4291-8654-2e5c62439169)
   )
-  (text "NTC 3950 10k 1%" (at 93.98 106.68 0)
+  (text "NTC 3950 10k 1%" (exclude_from_sim no)
+ (at 93.98 106.68 0)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid da232ed0-74e8-44d3-9193-b3b8c2b2a778)
   )
@@ -1514,7 +1510,7 @@
   (symbol (lib_id "Device:R") (at 116.84 44.45 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 10099071-48ca-47da-a074-a5c9e97b63ef)
-    (property "Reference" "R2" (at 118.618 43.8063 0)
+    (property "Reference" "R8" (at 118.618 43.8063 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "3k9" (at 118.618 45.7273 0)
@@ -1531,7 +1527,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R2") (unit 1)
+          (reference "R8") (unit 1)
         )
       )
     )
@@ -1561,7 +1557,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR07") (unit 1)
+          (reference "#PWR017") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1575,7 +1571,7 @@
   (symbol (lib_id "Device:C") (at 134.62 156.21 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 1921cfcf-9b6f-4b29-8e26-ee3d6e85bf6d)
-    (property "Reference" "C12" (at 137.541 155.5663 0)
+    (property "Reference" "C9" (at 137.541 155.5663 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "47u" (at 137.541 157.4873 0)
@@ -1592,7 +1588,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C12") (unit 1)
+          (reference "C9") (unit 1)
         )
       )
     )
@@ -1622,7 +1618,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR030") (unit 1)
+          (reference "#PWR026") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1636,13 +1632,13 @@
   (symbol (lib_id "Connector_Generic:Conn_01x03") (at 49.53 68.58 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 1b2e804f-d994-4919-9d43-d48352e2ac4b)
-    (property "Reference" "J5" (at 49.53 75.3999 0)
+    (property "Reference" "J2" (at 49.53 75.3999 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "PROG" (at 49.53 73.4789 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" (at 49.53 68.58 0)
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" (at 49.53 68.58 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 49.53 68.58 0)
@@ -1654,7 +1650,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "J5") (unit 1)
+          (reference "J2") (unit 1)
         )
       )
     )
@@ -1663,7 +1659,7 @@
   (symbol (lib_id "Device:C") (at 82.55 160.02 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 1b6bc4aa-b819-4677-bc8b-beef9b15fb0c)
-    (property "Reference" "C9" (at 85.471 159.3763 0)
+    (property "Reference" "C2" (at 85.471 159.3763 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "6n8" (at 85.471 161.2973 0)
@@ -1680,7 +1676,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C9") (unit 1)
+          (reference "C2") (unit 1)
         )
       )
     )
@@ -1710,7 +1706,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR02") (unit 1)
+          (reference "#PWR04") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1724,7 +1720,7 @@
   (symbol (lib_id "power:GND") (at 180.34 46.99 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 1d61bdc6-c431-412b-8e9e-5b24d4e0816d)
-    (property "Reference" "#PWR016" (at 173.99 46.99 0)
+    (property "Reference" "#PWR029" (at 173.99 46.99 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 177.1651 47.3068 90)
@@ -1740,7 +1736,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR016") (unit 1)
+          (reference "#PWR029") (unit 1)
         )
       )
     )
@@ -1749,7 +1745,7 @@
   (symbol (lib_id "Device:R") (at 82.55 167.64 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 2246a084-0a40-4728-b2fe-fd14ca1b180b)
-    (property "Reference" "R11" (at 84.328 166.9963 0)
+    (property "Reference" "R4" (at 84.328 166.9963 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "10k" (at 84.328 168.9173 0)
@@ -1766,7 +1762,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R11") (unit 1)
+          (reference "R4") (unit 1)
         )
       )
     )
@@ -1796,7 +1792,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR013") (unit 1)
+          (reference "#PWR025") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1810,7 +1806,7 @@
   (symbol (lib_id "Device:R") (at 71.12 167.64 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 2478dfef-de0b-47a0-8d4b-988f314c1139)
-    (property "Reference" "R10" (at 72.898 166.9963 0)
+    (property "Reference" "R3" (at 72.898 166.9963 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "47k" (at 72.898 168.9173 0)
@@ -1827,7 +1823,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R10") (unit 1)
+          (reference "R3") (unit 1)
         )
       )
     )
@@ -1881,7 +1877,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR08") (unit 1)
+          (reference "#PWR018") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1895,7 +1891,7 @@
   (symbol (lib_id "Device:C") (at 124.46 156.21 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 2e2ff0bf-f503-450e-bfe0-ffa940b384da)
-    (property "Reference" "C11" (at 127.381 155.5663 0)
+    (property "Reference" "C5" (at 127.381 155.5663 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "47u" (at 127.381 157.4873 0)
@@ -1912,7 +1908,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C11") (unit 1)
+          (reference "C5") (unit 1)
         )
       )
     )
@@ -1942,7 +1938,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR018") (unit 1)
+          (reference "#PWR030") (unit 1)
         )
       )
       (project "fan-switch"
@@ -1977,7 +1973,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR026") (unit 1)
+          (reference "#PWR015") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2012,7 +2008,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR012") (unit 1)
+          (reference "#PWR023") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2048,7 +2044,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "D2") (unit 1)
+          (reference "D1") (unit 1)
         )
       )
     )
@@ -2057,7 +2053,7 @@
   (symbol (lib_id "Connector_Generic:Conn_01x11") (at 238.76 135.89 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 3daf324a-215c-4511-9b48-f1a7b13dbc2f)
-    (property "Reference" "J6" (at 240.792 135.2463 0)
+    (property "Reference" "J5" (at 240.792 135.2463 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "ILI9225" (at 240.792 137.1673 0)
@@ -2083,7 +2079,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "J6") (unit 1)
+          (reference "J5") (unit 1)
         )
       )
     )
@@ -2092,7 +2088,7 @@
   (symbol (lib_id "power:+5V") (at 106.68 143.51 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 41312f89-32cc-4bbb-b752-204ad8b88073)
-    (property "Reference" "#PWR027" (at 106.68 147.32 0)
+    (property "Reference" "#PWR014" (at 106.68 147.32 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 106.68 140.0081 0)
@@ -2108,7 +2104,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR027") (unit 1)
+          (reference "#PWR014") (unit 1)
         )
       )
     )
@@ -2156,7 +2152,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "U1") (unit 1)
+          (reference "U3") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2170,7 +2166,7 @@
   (symbol (lib_id "power:+BATT") (at 34.29 143.51 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 41f08c8f-36f6-4c6f-8a1a-65a0d0f1e7ca)
-    (property "Reference" "#PWR032" (at 38.1 143.51 0)
+    (property "Reference" "#PWR01" (at 38.1 143.51 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+BATT" (at 31.115 143.8268 90)
@@ -2186,33 +2182,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR032") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 179.07 99.06 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 440122ca-8c05-4f05-af22-50d71d3e6885)
-    (property "Reference" "C5" (at 181.991 98.4163 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "47u" (at 181.991 100.3373 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" (at 178.1048 95.25 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 179.07 99.06 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 57064737-eef5-4881-8569-b370c47b8e9d))
-    (pin "2" (uuid be7f85f6-eee9-4880-a3f9-2715d5594dcc))
-    (instances
-      (project "hw-bms-48v"
-        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C5") (unit 1)
+          (reference "#PWR01") (unit 1)
         )
       )
     )
@@ -2242,7 +2212,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR021") (unit 1)
+          (reference "#PWR05") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2256,7 +2226,7 @@
   (symbol (lib_id "Device:R") (at 48.26 154.94 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 4ab45cbd-8912-4dcf-acde-e8e8825d3b12)
-    (property "Reference" "R9" (at 50.038 154.2963 0)
+    (property "Reference" "R2" (at 50.038 154.2963 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "20k" (at 50.038 156.2173 0)
@@ -2273,7 +2243,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R9") (unit 1)
+          (reference "R2") (unit 1)
         )
       )
     )
@@ -2282,7 +2252,7 @@
   (symbol (lib_id "Regulator_Switching:BD9G341EFJ") (at 68.58 151.13 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 4b32458f-090a-4949-a732-966f1a51833f)
-    (property "Reference" "U2" (at 70.5359 137.9601 0)
+    (property "Reference" "U1" (at 70.5359 137.9601 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "BD9G341EFJ" (at 70.5359 139.8811 0)
@@ -2305,7 +2275,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "U2") (unit 1)
+          (reference "U1") (unit 1)
         )
       )
     )
@@ -2367,7 +2337,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R7") (unit 1)
+          (reference "R13") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2437,7 +2407,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR024") (unit 1)
+          (reference "#PWR08") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2451,7 +2421,7 @@
   (symbol (lib_id "Device:R") (at 116.84 72.39 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 51480edd-66d5-4fa9-9645-865198b4d9a0)
-    (property "Reference" "R3" (at 118.618 71.7463 0)
+    (property "Reference" "R9" (at 118.618 71.7463 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "27k" (at 118.618 73.6673 0)
@@ -2468,33 +2438,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R3") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 189.23 99.06 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 5628362c-4105-441a-93a3-06e6645af02c)
-    (property "Reference" "C7" (at 192.151 98.4163 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "47u" (at 192.151 100.3373 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" (at 188.2648 95.25 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 189.23 99.06 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 7cdc34b7-74ca-427e-baaa-3eb1d5be0200))
-    (pin "2" (uuid f5fdbc50-fafc-496d-82a9-2850a4b5434a))
-    (instances
-      (project "hw-bms-48v"
-        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C7") (unit 1)
+          (reference "R9") (unit 1)
         )
       )
     )
@@ -2524,7 +2468,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR023") (unit 1)
+          (reference "#PWR06") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2538,7 +2482,7 @@
   (symbol (lib_id "power:+5V") (at 110.49 63.5 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 58a853f5-c55e-48bd-9f61-e09dba944b19)
-    (property "Reference" "#PWR06" (at 110.49 67.31 0)
+    (property "Reference" "#PWR016" (at 110.49 67.31 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 110.49 59.9981 0)
@@ -2554,7 +2498,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR06") (unit 1)
+          (reference "#PWR016") (unit 1)
         )
       )
     )
@@ -2624,7 +2568,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR034") (unit 1)
+          (reference "#PWR010") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2659,7 +2603,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR022") (unit 1)
+          (reference "#PWR07") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2673,7 +2617,7 @@
   (symbol (lib_id "Regulator_Linear:LM1117MP-3.3") (at 147.32 143.51 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 5e3e004c-f524-407b-963c-665905374e0e)
-    (property "Reference" "U3" (at 147.32 138.5951 0)
+    (property "Reference" "U2" (at 147.32 138.5951 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "LM1117MP-3.3" (at 147.32 140.5161 0)
@@ -2691,7 +2635,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "U3") (unit 1)
+          (reference "U2") (unit 1)
         )
       )
     )
@@ -2721,7 +2665,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR037") (unit 1)
+          (reference "#PWR033") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2735,7 +2679,7 @@
   (symbol (lib_id "Device:C") (at 184.15 46.99 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 64db0a4f-ebeb-4a91-9acd-fcf74ceb43d6)
-    (property "Reference" "C6" (at 184.15 41.8211 90)
+    (property "Reference" "C12" (at 184.15 41.8211 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "1u" (at 184.15 43.7421 90)
@@ -2752,7 +2696,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C6") (unit 1)
+          (reference "C12") (unit 1)
         )
       )
     )
@@ -2782,7 +2726,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR038") (unit 1)
+          (reference "#PWR034") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2796,7 +2740,7 @@
   (symbol (lib_id "power:+5V") (at 233.68 123.19 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 6b8f3e7f-f3fb-4df7-b89d-ad2893f2c70e)
-    (property "Reference" "#PWR036" (at 237.49 123.19 0)
+    (property "Reference" "#PWR032" (at 237.49 123.19 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 230.5051 123.5068 90)
@@ -2812,7 +2756,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR036") (unit 1)
+          (reference "#PWR032") (unit 1)
         )
       )
     )
@@ -2842,7 +2786,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR010") (unit 1)
+          (reference "#PWR021") (unit 1)
         )
       )
       (project "fan-switch"
@@ -2856,7 +2800,7 @@
   (symbol (lib_id "Device:C") (at 38.1 151.13 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 7a387591-1593-4cea-b9e9-461db554a2f4)
-    (property "Reference" "C14" (at 30.48 151.13 0)
+    (property "Reference" "C1" (at 30.48 151.13 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "10u/100V" (at 26.67 154.94 0)
@@ -2873,7 +2817,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C14") (unit 1)
+          (reference "C1") (unit 1)
         )
       )
     )
@@ -2908,45 +2852,10 @@
     )
   )
 
-  (symbol (lib_id "power:GND") (at 189.23 102.87 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 83cbd7c7-4e76-4b64-ba8c-2d78737eac48)
-    (property "Reference" "#PWR0104" (at 189.23 109.22 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "GND" (at 189.23 106.9261 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 189.23 102.87 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 189.23 102.87 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 23d8cad5-f670-4092-887f-25043d48b263))
-    (instances
-      (project "vertical"
-        (path "/32f9e9f8-9d15-4d51-acc1-705de5fd2b71"
-          (reference "#PWR0104") (unit 1)
-        )
-      )
-      (project "hw-bms-48v"
-        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR017") (unit 1)
-        )
-      )
-      (project "fan-switch"
-        (path "/daeb12be-bf80-48c0-bd2f-cd988e135095"
-          (reference "#PWR0104") (unit 1)
-        )
-      )
-    )
-  )
-
   (symbol (lib_id "Device:C") (at 135.89 67.31 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 83e4ae5e-1ac0-4117-bcb7-fa064c29fb37)
-    (property "Reference" "C4" (at 139.7 69.85 90)
+    (property "Reference" "C10" (at 139.7 69.85 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "1u" (at 132.08 69.85 90)
@@ -2963,7 +2872,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C4") (unit 1)
+          (reference "C10") (unit 1)
         )
       )
     )
@@ -2972,7 +2881,7 @@
   (symbol (lib_id "Device:C") (at 86.36 139.7 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 85d47b7e-2429-4125-a2df-6d1675653faf)
-    (property "Reference" "C8" (at 89.281 139.0563 0)
+    (property "Reference" "C3" (at 89.281 139.0563 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100n" (at 89.281 140.9773 0)
@@ -2989,7 +2898,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C8") (unit 1)
+          (reference "C3") (unit 1)
         )
       )
     )
@@ -2998,7 +2907,7 @@
   (symbol (lib_id "Device:R") (at 116.84 36.83 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 86e199cc-0f81-407e-803c-c321c444d053)
-    (property "Reference" "R1" (at 118.618 36.1863 0)
+    (property "Reference" "R7" (at 118.618 36.1863 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "100k" (at 118.618 38.1073 0)
@@ -3015,25 +2924,25 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R1") (unit 1)
+          (reference "R7") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:+3V3") (at 172.72 95.25 90) (unit 1)
+  (symbol (lib_id "power:+3V3") (at 195.58 95.25 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 88e5858d-4127-4739-abea-a224c322d48a)
-    (property "Reference" "#PWR04" (at 176.53 95.25 0)
+    (property "Reference" "#PWR04" (at 199.39 95.25 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Value" "+3V3" (at 169.545 95.5366 90)
+    (property "Value" "+3V3" (at 192.405 95.5366 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "" (at 172.72 95.25 0)
+    (property "Footprint" "" (at 195.58 95.25 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (at 172.72 95.25 0)
+    (property "Datasheet" "" (at 195.58 95.25 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 78a3544a-f9d9-4632-90b6-b2d71436fb9a))
@@ -3045,7 +2954,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR014") (unit 1)
+          (reference "#PWR031") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3059,7 +2968,7 @@
   (symbol (lib_id "power:+BATT") (at 99.06 33.02 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8ff7ba08-57c9-452a-a2f7-d1a0d5f79cc6)
-    (property "Reference" "#PWR03" (at 102.87 33.02 0)
+    (property "Reference" "#PWR011" (at 102.87 33.02 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+BATT" (at 95.885 33.3368 90)
@@ -3075,7 +2984,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR03") (unit 1)
+          (reference "#PWR011") (unit 1)
         )
       )
     )
@@ -3084,7 +2993,7 @@
   (symbol (lib_id "Device:R") (at 125.73 100.33 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 97f10a00-2dc0-452a-8b89-46f0ba47b050)
-    (property "Reference" "R5" (at 127.508 99.6863 0)
+    (property "Reference" "R11" (at 127.508 99.6863 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "27k" (at 127.508 101.6073 0)
@@ -3101,7 +3010,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R5") (unit 1)
+          (reference "R11") (unit 1)
         )
       )
     )
@@ -3131,7 +3040,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR05") (unit 1)
+          (reference "#PWR013") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3145,7 +3054,7 @@
   (symbol (lib_id "Device:R") (at 116.84 80.01 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 9df1ec05-ac5e-4cb5-a1af-9a229ab0e0c5)
-    (property "Reference" "R4" (at 118.618 79.3663 0)
+    (property "Reference" "R10" (at 118.618 79.3663 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "100k" (at 118.618 81.2873 0)
@@ -3162,7 +3071,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R4") (unit 1)
+          (reference "R10") (unit 1)
         )
       )
     )
@@ -3192,7 +3101,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR011") (unit 1)
+          (reference "#PWR022") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3206,7 +3115,7 @@
   (symbol (lib_id "Device:C") (at 92.71 160.02 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid abcf1263-3360-4e0b-bcd1-9beb0027c33e)
-    (property "Reference" "C10" (at 95.631 159.3763 0)
+    (property "Reference" "C4" (at 95.631 159.3763 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "???" (at 95.631 161.2973 0)
@@ -3223,7 +3132,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C10") (unit 1)
+          (reference "C4") (unit 1)
         )
       )
     )
@@ -3253,38 +3162,12 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR035") (unit 1)
+          (reference "#PWR02") (unit 1)
         )
       )
       (project "fan-switch"
         (path "/daeb12be-bf80-48c0-bd2f-cd988e135095"
           (reference "#PWR0104") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 158.75 156.21 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid af5a55cb-9557-4a99-b4b6-a8ebcf8cd119)
-    (property "Reference" "C13" (at 161.671 155.5663 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "10u" (at 161.671 157.4873 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" (at 157.7848 152.4 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 158.75 156.21 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid aa094795-3a1f-4f01-befd-09145fa5a85f))
-    (pin "2" (uuid 5417af53-2a5c-4ab0-a8f7-425fc3050040))
-    (instances
-      (project "hw-bms-48v"
-        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C13") (unit 1)
         )
       )
     )
@@ -3314,7 +3197,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR031") (unit 1)
+          (reference "#PWR027") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3328,7 +3211,7 @@
   (symbol (lib_id "power:+BATT") (at 45.72 52.07 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid b224370b-b0db-4ce7-853a-be777227d7db)
-    (property "Reference" "#PWR01" (at 41.91 52.07 0)
+    (property "Reference" "#PWR03" (at 41.91 52.07 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+BATT" (at 48.895 52.3868 90)
@@ -3344,7 +3227,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR01") (unit 1)
+          (reference "#PWR03") (unit 1)
         )
       )
     )
@@ -3353,7 +3236,7 @@
   (symbol (lib_id "Device:C") (at 125.73 80.01 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid b26a4003-9b20-434b-bd16-8e2c300a8d29)
-    (property "Reference" "C2" (at 128.651 79.3663 0)
+    (property "Reference" "C7" (at 128.651 79.3663 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "1u" (at 128.651 81.2873 0)
@@ -3370,42 +3253,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C2") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:GND") (at 179.07 102.87 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid b2ff06ac-cbd8-4ef5-931c-5a79586d4c95)
-    (property "Reference" "#PWR0104" (at 179.07 109.22 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "GND" (at 179.07 106.9261 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 179.07 102.87 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 179.07 102.87 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid edcc42dd-41eb-4ced-afee-ffebda45d40c))
-    (instances
-      (project "vertical"
-        (path "/32f9e9f8-9d15-4d51-acc1-705de5fd2b71"
-          (reference "#PWR0104") (unit 1)
-        )
-      )
-      (project "hw-bms-48v"
-        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR015") (unit 1)
-        )
-      )
-      (project "fan-switch"
-        (path "/daeb12be-bf80-48c0-bd2f-cd988e135095"
-          (reference "#PWR0104") (unit 1)
+          (reference "C7") (unit 1)
         )
       )
     )
@@ -3467,7 +3315,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR09") (unit 1)
+          (reference "#PWR020") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3481,7 +3329,7 @@
   (symbol (lib_id "Device:R") (at 191.77 40.64 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d1b8a5a0-cc23-49fa-9bdc-9622692dd9f5)
-    (property "Reference" "R6" (at 193.548 39.9963 0)
+    (property "Reference" "R12" (at 193.548 39.9963 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "10k" (at 193.548 41.9173 0)
@@ -3498,7 +3346,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R6") (unit 1)
+          (reference "R12") (unit 1)
         )
       )
     )
@@ -3507,7 +3355,7 @@
   (symbol (lib_id "Device:C") (at 125.73 44.45 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d3f72088-253a-4ed6-9265-da0dcf35a314)
-    (property "Reference" "C1" (at 128.651 43.8063 0)
+    (property "Reference" "C6" (at 128.651 43.8063 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "1u" (at 128.651 45.7273 0)
@@ -3524,7 +3372,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C1") (unit 1)
+          (reference "C6") (unit 1)
         )
       )
     )
@@ -3554,7 +3402,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR029") (unit 1)
+          (reference "#PWR019") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3589,7 +3437,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR019") (unit 1)
+          (reference "#PWR036") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3603,7 +3451,7 @@
   (symbol (lib_id "Device:C") (at 125.73 107.95 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d83fdd5d-fccf-4897-b873-0d4154906783)
-    (property "Reference" "C3" (at 128.651 107.3063 0)
+    (property "Reference" "C8" (at 128.651 107.3063 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "1u" (at 128.651 109.2273 0)
@@ -3620,7 +3468,33 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "C3") (unit 1)
+          (reference "C8") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Device:C") (at 158.75 156.21 180) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid d87e620a-73f4-4adf-a8a5-3ea49f697ec1)
+    (property "Reference" "C11" (at 161.671 155.5663 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+    (property "Value" "47u" (at 161.671 157.4873 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" (at 157.7848 152.4 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 158.75 156.21 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 47810f56-6699-4380-8f5e-d77fa17f51ee))
+    (pin "2" (uuid 426cfd4b-e654-4980-bf06-6408a05d4bb4))
+    (instances
+      (project "hw-bms-48v"
+        (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
+          (reference "C11") (unit 1)
         )
       )
     )
@@ -3629,10 +3503,10 @@
   (symbol (lib_id "Device:R") (at 106.68 147.32 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid df4e9942-fc95-46a4-81bf-bd28a12b62ed)
-    (property "Reference" "R12" (at 108.458 146.6763 0)
+    (property "Reference" "R5" (at 108.458 146.6763 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "3k" (at 108.458 148.5973 0)
+    (property "Value" "3k (3.9k?)" (at 108.458 148.5973 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" (at 104.902 147.32 90)
@@ -3646,7 +3520,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R12") (unit 1)
+          (reference "R5") (unit 1)
         )
       )
     )
@@ -3700,7 +3574,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR04") (unit 1)
+          (reference "#PWR012") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3736,7 +3610,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "D1") (unit 1)
+          (reference "D2") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3795,7 +3669,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR020") (unit 1)
+          (reference "#PWR035") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3809,7 +3683,7 @@
   (symbol (lib_id "Device:R") (at 106.68 154.94 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid e9d351fc-3f4c-468d-9708-2703244f65c0)
-    (property "Reference" "R13" (at 108.458 154.2963 0)
+    (property "Reference" "R6" (at 108.458 154.2963 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "750R" (at 108.458 156.2173 0)
@@ -3826,7 +3700,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R13") (unit 1)
+          (reference "R6") (unit 1)
         )
       )
     )
@@ -3906,7 +3780,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR025") (unit 1)
+          (reference "#PWR09") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3941,7 +3815,7 @@
       )
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "#PWR033") (unit 1)
+          (reference "#PWR024") (unit 1)
         )
       )
       (project "fan-switch"
@@ -3955,7 +3829,7 @@
   (symbol (lib_id "Device:R") (at 48.26 147.32 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid f99c2f09-6d6c-427a-bb1a-e262b12efb2f)
-    (property "Reference" "R8" (at 50.038 146.6763 0)
+    (property "Reference" "R1" (at 50.038 146.6763 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "100k" (at 50.038 148.5973 0)
@@ -3972,7 +3846,7 @@
     (instances
       (project "hw-bms-48v"
         (path "/acc91bfd-f3e2-4474-a962-d4ec26b06dd0"
-          (reference "R8") (unit 1)
+          (reference "R1") (unit 1)
         )
       )
     )
