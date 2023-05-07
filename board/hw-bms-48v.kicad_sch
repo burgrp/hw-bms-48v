@@ -1079,7 +1079,6 @@
     )
   )
 
-
   (junction (at 125.73 40.64) (diameter 0) (color 0 0 0 0)
     (uuid 01c92a8a-a719-43f1-b3e1-d29afb2db40e)
   )
@@ -1406,7 +1405,7 @@
     (uuid f1676b96-b0df-4678-b2c8-42d06c85f706)
   )
 
-  (text "next version fixes:\n- C1 - replace by 4pcs 10uF/50V 1206\n- Horizontal trimmer" (exclude_from_sim no)
+  (text "next version fixes:\n- C1 - replace by 4pcs 10uF/50V 1206\n- Horizontal trimmer\n- FIX GROUND LOOPS (USB.GND->ESP32.GND)" (exclude_from_sim no)
 
     (at 26.67 109.22 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))

@@ -2,7 +2,9 @@
 .PHONY: requirements deploy
 
 PROJECT_NAME=bms-48v
-BUILDER_IMAGE=ghcr.io/burgrp/mpy-builder-esp32c3:latest
+IDF_VERSION=v4.4.4
+MPY_VERSIOON=v1.20.0
+BUILDER_IMAGE=ghcr.io/burgrp/mpy-builder-esp32c3:${IDF_VERSION}-${MPY_VERSIOON}
 PORT=/dev/ttyACM0
 
 CONTAINER_NAME=${PROJECT_NAME}-builder
