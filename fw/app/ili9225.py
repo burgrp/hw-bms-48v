@@ -1,6 +1,7 @@
 from machine import Pin, SPI
 from micropython import const
 import utime
+import framebuf
 
 # Register definitions
 
@@ -43,19 +44,43 @@ ILI9225_GAMMA_CTRL8=const(0x57)  # Gamma Control 8
 ILI9225_GAMMA_CTRL9=const(0x58)  # Gamma Control 9
 ILI9225_GAMMA_CTRL10=const(0x59)  # Gamma Control 10
 
+ILI9225_WIDTH=const(176)
+ILI9225_HEIGHT=const(220)
 
 def short_delay():
     utime.sleep_ms(50)
 
-class ILI9225:
+class Palette:
+    def __init__(self, channel_bits):
+        self.channel_bits = channel_bits
+        self.palette = bytearray(2 << channel_bits)
 
-    def __init__(self, sck_pin=None, mosi_pin=None, rs_pin=None, rst_pin=None, ss_pin=None, bl_pin=None):
+    def set_color(self, index, r, g, b):
+        # convert 8-bit RGB to 16-bit RGB565
+        self.palette[index * 2] = (r & 0xF8) | (g >> 5)
+        self.palette[index * 2 + 1] = ((g & 0x1C) << 3) | (b >> 3)
 
-        self.spi = SPI(1, 40000000, sck=Pin(sck_pin), mosi=Pin(mosi_pin), miso=Pin(3))
+class ILI9225(framebuf.FrameBuffer):
 
-        self.rst = Pin(rst_pin, Pin.OUT)
-        self.rs = Pin(rs_pin, Pin.OUT)
+    def __init__(self, palette, spi, ss_pin, rs_pin, rst_pin):
+
+        self.palette = palette
+
+        self.data = bytearray(ILI9225_WIDTH * ILI9225_HEIGHT // 8 * palette.channel_bits)
+        self.line = bytearray(ILI9225_WIDTH * 2)
+
+        mode = framebuf.GS8 if palette.channel_bits == 8 \
+            else framebuf.GS4_HMSB if palette.channel_bits == 4 \
+            else framebuf.GS2_HMSB if palette.channel_bits == 2 \
+            else framebuf.MONO_HLSB
+
+        super().__init__(self.data, ILI9225_WIDTH, ILI9225_HEIGHT, mode)
+
+        self.spi = spi
+
         self.ss = Pin(ss_pin, Pin.OUT)
+        self.rs = Pin(rs_pin, Pin.OUT)
+        self.rst = Pin(rst_pin, Pin.OUT)
 
         self.ss.value(1)
 
@@ -66,7 +91,7 @@ class ILI9225:
         self.rst.value(1)
         short_delay()
 
-        self.begin_tx()
+        self.tx_begin()
 
 	    # Power-on sequence
         self.set_register(ILI9225_POWER_CTRL1, 0x0000)
@@ -96,40 +121,33 @@ class ILI9225:
         self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
         self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
         # Set GRAM area
-        # self.set_register(ILI9225_GATE_SCAN_CTRL, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL1, 0x00DB)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL2, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL3, 0x0000)
-        # self.set_register(ILI9225_PARTIAL_DRIVING_POS1, 0x00DB)
-        # self.set_register(ILI9225_PARTIAL_DRIVING_POS2, 0x0000)
-        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, 0x00AF)
-        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, 0x00DB)
-        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, 0x0000)
+        self.set_register(ILI9225_GATE_SCAN_CTRL, 0x0000)
+        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL1, 0x00DB)
+        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL2, 0x0000)
+        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL3, 0x0000)
+        self.set_register(ILI9225_PARTIAL_DRIVING_POS1, 0x00DB)
+        self.set_register(ILI9225_PARTIAL_DRIVING_POS2, 0x0000)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, 0x00AF)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, 0x0000)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, 0x00DB)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, 0x0000)
         # Set GAMMA curve
-        # self.set_register(ILI9225_GAMMA_CTRL1, 0x0000)
-        # self.set_register(ILI9225_GAMMA_CTRL2, 0x0808)
-        # self.set_register(ILI9225_GAMMA_CTRL3, 0x080A)
-        # self.set_register(ILI9225_GAMMA_CTRL4, 0x000A)
-        # self.set_register(ILI9225_GAMMA_CTRL5, 0x0A08)
-        # self.set_register(ILI9225_GAMMA_CTRL6, 0x0808)
-        # self.set_register(ILI9225_GAMMA_CTRL7, 0x0000)
-        # self.set_register(ILI9225_GAMMA_CTRL8, 0x0A00)
-        # self.set_register(ILI9225_GAMMA_CTRL9, 0x0710)
-        # self.set_register(ILI9225_GAMMA_CTRL10, 0x0710)
-        # self.set_register(ILI9225_DISP_CTRL1, 0x0012)
+        self.set_register(ILI9225_GAMMA_CTRL1, 0x0000)
+        self.set_register(ILI9225_GAMMA_CTRL2, 0x0808)
+        self.set_register(ILI9225_GAMMA_CTRL3, 0x080A)
+        self.set_register(ILI9225_GAMMA_CTRL4, 0x000A)
+        self.set_register(ILI9225_GAMMA_CTRL5, 0x0A08)
+        self.set_register(ILI9225_GAMMA_CTRL6, 0x0808)
+        self.set_register(ILI9225_GAMMA_CTRL7, 0x0000)
+        self.set_register(ILI9225_GAMMA_CTRL8, 0x0A00)
+        self.set_register(ILI9225_GAMMA_CTRL9, 0x0710)
+        self.set_register(ILI9225_GAMMA_CTRL10, 0x0710)
+        self.set_register(ILI9225_DISP_CTRL1, 0x0012)
         short_delay()
         self.set_register(ILI9225_DISP_CTRL1, 0x1017);
 
+        self.tx_end()
 
-        self.rs.value(0)
-        self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
-        self.rs.value(1)
-        for i in range(0, 100):
-            for j in range(0, 120):
-                self.spi.write(bytes([0xF0, 0xF0]))
-
-        self.end_tx()
 
     def set_register(self, register, value):
         self.rs.value(0)
@@ -138,9 +156,29 @@ class ILI9225:
         self.spi.write(bytes([value >> 8, value & 0xFF]))
         return self
 
-    def begin_tx(self):
+    def tx_begin(self):
         self.ss.value(0)
 
-    def end_tx(self):
+    def tx_end(self):
         self.ss.value(1)
+
+    def show(self):
+        self.tx_begin()
+        self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
+        self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
+        self.rs.value(0)
+        self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
+        self.rs.value(1)
+
+        line = self.line
+        palette = self.palette.palette
+
+        for y in range(0, ILI9225_HEIGHT):
+            for x in range(0, ILI9225_WIDTH):
+                color = self.pixel(x, y)
+                line[x * 2] = palette[color * 2]
+                line[x * 2 + 1] = palette[color * 2 + 1]
+            self.spi.write(line)
+
+        self.tx_end()
 
