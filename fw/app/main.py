@@ -3,6 +3,8 @@ import mqtt_reg
 import math
 from machine import ADC, ADCBlock, Pin
 
+from ili9225 import ILI9225
+
 import sys
 sys.path.append('/')
 import site_config
@@ -28,7 +30,7 @@ registry = mqtt_reg.Registry(
     wifi_ssid=site_config.wifi_ssid,
     wifi_password=site_config.wifi_password,
     mqtt_broker=site_config.mqtt_broker,
-    ledPin=21,
+    ledPin=site_config.pinLed,
     debug=site_config.debug
 )
 
@@ -39,6 +41,8 @@ print('Starting main loop')
 adcTemp = ADC(Pin(site_config.adcTemp), atten=ADC.ATTN_11DB)
 adcVoltage = ADC(Pin(site_config.adcVoltage), atten=ADC.ATTN_11DB)
 adcCurrent = ADC(Pin(site_config.adcCurrent), atten=ADC.ATTN_11DB)
+
+display = ILI9225(sck_pin=site_config.dispSckPin, mosi_pin=site_config.dispMosiPin, rs_pin=site_config.dispRsPin, rst_pin=site_config.dispRstPin, ss_pin=site_config.dispSsPin, bl_pin=site_config.dispBlPin)
 
 while True:
     time.sleep(1)
