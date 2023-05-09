@@ -3,7 +3,7 @@ import mqtt_reg
 import math
 from machine import ADC, SPI, Pin
 
-from ili9225 import ILI9225, Palette
+from ili9225 import ILI9225, Palette, ILI9225_HEIGHT, ILI9225_WIDTH
 
 import sys
 sys.path.append('/')
@@ -19,8 +19,14 @@ print("".join("\\x%02x" % i for i in palette.palette))
 display = ILI9225(palette, spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin)
 
 display.fill(0)
-display.text('Nazdar displeji!', 0, 0, 1)
-display.hline(0, 9, 96, 1)
+display.show()
+
+display.text('Nazdar displeji!', 0, 0, 3)
+
+for y in range(0, ILI9225_HEIGHT, 10):
+    display.hline(0, y, ILI9225_WIDTH, 1)
+for x in range(0, ILI9225_WIDTH, 10):
+    display.vline(x, 0, ILI9225_HEIGHT, 2)
 
 display.show()
 

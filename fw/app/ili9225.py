@@ -67,7 +67,6 @@ class ILI9225(framebuf.FrameBuffer):
         self.palette = palette
 
         self.data = bytearray(ILI9225_WIDTH * ILI9225_HEIGHT // 8 * palette.channel_bits)
-        self.line = bytearray(ILI9225_WIDTH * 2)
 
         mode = framebuf.GS8 if palette.channel_bits == 8 \
             else framebuf.GS4_HMSB if palette.channel_bits == 4 \
@@ -170,8 +169,9 @@ class ILI9225(framebuf.FrameBuffer):
         self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
         self.rs.value(1)
 
-        line = self.line
         palette = self.palette.palette
+        line = bytearray(ILI9225_WIDTH * 2)
+        data = self.data
 
         for y in range(0, ILI9225_HEIGHT):
             for x in range(0, ILI9225_WIDTH):
