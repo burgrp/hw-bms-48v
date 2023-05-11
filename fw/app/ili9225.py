@@ -64,16 +64,20 @@ class ILI9225(framebuf.FrameBuffer):
 
     def __init__(self, palette, spi, ss_pin, rs_pin, rst_pin):
 
-        self.palette = palette
+        self.width = ILI9225_WIDTH
+        self.height = ILI9225_HEIGHT
 
-        self.data = bytearray(ILI9225_WIDTH * ILI9225_HEIGHT // 8 * palette.channel_bits)
+        self.palette = palette
 
         mode = framebuf.GS8 if palette.channel_bits == 8 \
             else framebuf.GS4_HMSB if palette.channel_bits == 4 \
             else framebuf.GS2_HMSB if palette.channel_bits == 2 \
             else framebuf.MONO_HLSB
 
-        super().__init__(self.data, ILI9225_WIDTH, ILI9225_HEIGHT, mode)
+        buffer_size = ILI9225_WIDTH * ILI9225_HEIGHT // 8 * palette.channel_bits
+
+        super().__init__(bytearray(buffer_size), ILI9225_WIDTH, ILI9225_HEIGHT, mode)
+        self.second_buffer = framebuf.FrameBuffer(bytearray(buffer_size), ILI9225_WIDTH, ILI9225_HEIGHT, mode)
 
         self.spi = spi
 
@@ -161,7 +165,12 @@ class ILI9225(framebuf.FrameBuffer):
     def tx_end(self):
         self.ss.value(1)
 
+    # refresh the screen with the contents of self buffer
+    # x1, y1, x2, y2 define the rectangle to refresh all inclusive
     def refresh(self, x1, y1, x2, y2):
+        if x1 < 0 or y1 < 0 or x2 > self.width or y2 > self.height or x1 > x2 or y1 > y2:
+            return
+
         self.tx_begin()
 
         self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
@@ -177,20 +186,60 @@ class ILI9225(framebuf.FrameBuffer):
 
         palette = self.palette.palette
 
-        width = x2 - x1
-        height = y2 - y1
-        line_count = 10
+        width = x2 - x1 + 1
+        height = y2 - y1 + 1
+        line_count = min(max(5000 // width, 1), height)
         lines = bytearray(width * 2 * line_count)
+        print('------------------')
         for y in range(0, height, line_count):
-            for l in range(0, line_count):
+            lc = min(line_count, ILI9225_HEIGHT - y)
+            print('lc', lc)
+            for l in range(0, lc):
+                line_offset = l * width * 2
+                print('line_offset', line_offset)
+                print('y', y, 'l', l)
                 for x in range(0, width):
-                    color = self.pixel(x + x1, y + y1 + l)
-                    offset = (l * width + x) * 2
+                    rx = x + x1
+                    ry = y + y1 + l
+                    color = self.pixel(rx, ry)
+                    self.second_buffer.pixel(rx, ry, color)
+                    offset = line_offset + x * 2
+
+
+                    print('rx', rx, 'ry', ry)
+
+
                     lines[offset] = palette[color * 2]
                     lines[offset + 1] = palette[color * 2 + 1]
-            self.spi.write(lines)
+            send = lines[:lc * width * 2] if lc < line_count else lines
+            self.spi.write(send)
 
         self.tx_end()
 
+    def find_dirty(self):
+
+        # find first dirty pixel area
+
+        x1 = y1 = x2 = y2 = None
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.pixel(x, y) != self.second_buffer.pixel(x, y):
+                    if x1 is None:
+                        x1 = x2 = x
+                        y1 = y2 = y
+                    else:
+                        x1 = min(x1, x)
+                        y1 = min(y1, y)
+                        x2 = max(x2, x)
+                        y2 = max(y2, y)
+
+        return (x1, y1, x2 + 1, y2 + 1) if x1 is not None else None
+
+
     def show(self):
-        self.refresh(0, 0, 100, 100)
+        self.refresh(75, 100, 123, 207)
+        # dirty = self.find_dirty()
+        # if dirty:
+        #     x1, y1, x2, y2 = dirty
+        #     print("refresh", x1, y1, x2, y2)
+        #     self.refresh(x1, y1, x2, y2)

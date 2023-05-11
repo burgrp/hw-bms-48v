@@ -12,8 +12,8 @@ import site_config
 spi = SPI(1, baudrate=10000000, polarity=0, phase=0, sck=Pin(site_config.dispSckPin), mosi=Pin(site_config.dispMosiPin), miso=Pin(site_config.dispMisoPin))
 palette = Palette(2)
 palette.set_color(0, 0, 0, 0)
-palette.set_color(1, 255, 0, 255)
-palette.set_color(2, 0, 255, 255)
+palette.set_color(1, 100, 0, 50)
+palette.set_color(2, 100, 50, 200)
 palette.set_color(3, 255, 255, 255)
 print("".join("\\x%02x" % i for i in palette.palette))
 display = ILI9225(palette, spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin)
@@ -21,14 +21,23 @@ display = ILI9225(palette, spi, site_config.dispSsPin, site_config.dispRsPin, si
 display.fill(0)
 display.show()
 
-display.text('Nazdar displeji!', 0, 0, 3)
-
 for y in range(0, ILI9225_HEIGHT, 10):
     display.hline(0, y, ILI9225_WIDTH, 1)
 for x in range(0, ILI9225_WIDTH, 10):
     display.vline(x, 0, ILI9225_HEIGHT, 2)
 
-display.show()
+for y in range(0, ILI9225_HEIGHT, 10):
+    display.text('y = ' + str(y), 0, y, 3)
+
+c = 0
+while True:
+    display.rect(100, 100, 70, 10, 0, True)
+    display.ellipse(80, c, 5, 5, 1+(c & 3), True)
+    display.text(str(c), 100, 100, 3)
+    display.show()
+    c += 1
+    if c > ILI9225_HEIGHT - 10:
+        c = 0
 
 
 # def ntc3950_resistance_to_temperature(resistance_ohm):
