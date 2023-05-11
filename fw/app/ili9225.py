@@ -161,24 +161,36 @@ class ILI9225(framebuf.FrameBuffer):
     def tx_end(self):
         self.ss.value(1)
 
-    def show(self):
+    def refresh(self, x1, y1, x2, y2):
         self.tx_begin()
+
         self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
         self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x2 - 1)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, x1)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y2 - 1)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, y1)
+
         self.rs.value(0)
         self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
         self.rs.value(1)
 
         palette = self.palette.palette
-        line = bytearray(ILI9225_WIDTH * 2)
-        data = self.data
 
-        for y in range(0, ILI9225_HEIGHT):
-            for x in range(0, ILI9225_WIDTH):
-                color = self.pixel(x, y)
-                line[x * 2] = palette[color * 2]
-                line[x * 2 + 1] = palette[color * 2 + 1]
-            self.spi.write(line)
+        width = x2 - x1
+        height = y2 - y1
+        line_count = 10
+        lines = bytearray(width * 2 * line_count)
+        for y in range(0, height, line_count):
+            for l in range(0, line_count):
+                for x in range(0, width):
+                    color = self.pixel(x + x1, y + y1 + l)
+                    offset = (l * width + x) * 2
+                    lines[offset] = palette[color * 2]
+                    lines[offset + 1] = palette[color * 2 + 1]
+            self.spi.write(lines)
 
         self.tx_end()
 
+    def show(self):
+        self.refresh(0, 0, 100, 100)
