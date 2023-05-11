@@ -175,9 +175,9 @@ class ILI9225(framebuf.FrameBuffer):
 
         self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
         self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x2 - 1)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x2)
         self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, x1)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y2 - 1)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y2)
         self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, y1)
 
         self.rs.value(0)
@@ -188,31 +188,26 @@ class ILI9225(framebuf.FrameBuffer):
 
         width = x2 - x1 + 1
         height = y2 - y1 + 1
-        line_count = min(max(5000 // width, 1), height)
+        line_count = min(max(2000 // width, 1), height)
+        line_count = 1
         lines = bytearray(width * 2 * line_count)
-        print('------------------')
         for y in range(0, height, line_count):
-            lc = min(line_count, ILI9225_HEIGHT - y)
-            print('lc', lc)
+            lc = min(line_count, height - y)
             for l in range(0, lc):
                 line_offset = l * width * 2
-                print('line_offset', line_offset)
-                print('y', y, 'l', l)
                 for x in range(0, width):
                     rx = x + x1
                     ry = y + y1 + l
                     color = self.pixel(rx, ry)
                     self.second_buffer.pixel(rx, ry, color)
                     offset = line_offset + x * 2
-
-
-                    print('rx', rx, 'ry', ry)
-
-
                     lines[offset] = palette[color * 2]
                     lines[offset + 1] = palette[color * 2 + 1]
-            send = lines[:lc * width * 2] if lc < line_count else lines
-            self.spi.write(send)
+
+            if lc < line_count:
+                self.spi.write(memoryview(lines)[:lc * width * 2])
+            else:
+                self.spi.write(lines)
 
         self.tx_end()
 
@@ -233,13 +228,13 @@ class ILI9225(framebuf.FrameBuffer):
                         x2 = max(x2, x)
                         y2 = max(y2, y)
 
-        return (x1, y1, x2 + 1, y2 + 1) if x1 is not None else None
+        return (x1, y1, x2, y2) if x1 is not None else None
 
 
     def show(self):
-        self.refresh(75, 100, 123, 207)
-        # dirty = self.find_dirty()
-        # if dirty:
-        #     x1, y1, x2, y2 = dirty
-        #     print("refresh", x1, y1, x2, y2)
-        #     self.refresh(x1, y1, x2, y2)
+        self.refresh(75, 100, 122, 206)
+        dirty = self.find_dirty()
+        if dirty:
+            x1, y1, x2, y2 = dirty
+            print("refresh", x1, y1, x2, y2)
+            self.refresh(x1, y1, x2, y2)

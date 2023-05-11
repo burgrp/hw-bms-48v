@@ -26,14 +26,19 @@ for y in range(0, ILI9225_HEIGHT, 10):
 for x in range(0, ILI9225_WIDTH, 10):
     display.vline(x, 0, ILI9225_HEIGHT, 2)
 
+display.hline(0, 0, ILI9225_WIDTH - 1, 3)
+display.hline(0, ILI9225_HEIGHT - 1, ILI9225_WIDTH - 1, 3)
+display.vline(0, 0, ILI9225_HEIGHT - 1, 3)
+display.vline(ILI9225_WIDTH - 1, 0, ILI9225_HEIGHT - 1, 3)
+
 for y in range(0, ILI9225_HEIGHT, 10):
     display.text('y = ' + str(y), 0, y, 3)
 
 c = 0
 while True:
-    display.rect(100, 100, 70, 10, 0, True)
-    display.ellipse(80, c, 5, 5, 1+(c & 3), True)
-    display.text(str(c), 100, 100, 3)
+    display.rect(100, 50, 70, 10, 0, True)
+    #display.ellipse(80, c, 5, 5, 1+(c & 3), True)
+    display.text(str(c), 100, 50, 3)
     display.show()
     c += 1
     if c > ILI9225_HEIGHT - 10:
