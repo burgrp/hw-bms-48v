@@ -204,9 +204,34 @@ class ILI9225():
 
         self.window_end()
 
-    def print(self, text, x, y, char_width, font, fg_color = COLOR_WHITE, bg_color = COLOR_BLACK, align = ALIGN_LEFT, width = None):
-        (char_bitmap, char_height, char_width) = font.get_ch(text)
-        self.bitmap(char_bitmap, x, y, char_width, char_height, fg_color, bg_color)
+    def print(self, text, x, y, font, fg_color = COLOR_WHITE, bg_color = COLOR_BLACK, align = ALIGN_LEFT, x2 = None):
+
+        text_width = 0
+        text_height = 0
+        for char in text:
+            (char_bitmap, char_height, char_width) = font.get_ch(char)
+            text_width += char_width
+            text_height = max(text_height, char_height)
+
+        if x2 is None:
+            x2 = text_width
+
+        pad_left = 0 if align == ALIGN_LEFT else (x2 - x - text_width) if align == ALIGN_RIGHT else (x2 - x - text_width) // 2
+
+        if pad_left > 0:
+            self.fill_rect(x, y, pad_left, text_height, bg_color)
+            x += pad_left
+
+        for char in text:
+            (char_bitmap, char_height, char_width) = font.get_ch(char)
+            self.bitmap(char_bitmap, x, y, char_width, char_height, fg_color, bg_color)
+            x += char_width
+
+        if x2 > x:
+            self.fill_rect(x, y, x2 - x, char_height, bg_color)
+            x = x2
+
+        return x
 
     def fill_rect(self, x, y, width, height, color = COLOR_WHITE):
 
