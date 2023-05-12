@@ -113,38 +113,13 @@ class ILI9225:
         short_delay()
         self.set_register(ILI9225_DRIVER_OUTPUT_CTRL, 0x011C)
         self.set_register(ILI9225_LCD_AC_DRIVING_CTRL, 0x0100)
-        self.set_register(ILI9225_ENTRY_MODE, [0x1030, 0x1028, 0, 0x1018][self.rotation])
+        self.set_register(ILI9225_ENTRY_MODE, [0x1030, 0x1028, 0x1000, 0x1018][self.rotation])
         self.set_register(ILI9225_DISP_CTRL1, 0x0000)
         self.set_register(ILI9225_DISP_CTRL2, 0x0808)
         self.set_register(ILI9225_FRAME_CYCLE_CTRL, 0x1100)
         self.set_register(ILI9225_INTERFACE_CTRL, 0x0000)
         self.set_register(ILI9225_OSC_CTRL, 0x0D01)
         self.set_register(ILI9225_VCI_RECYCLING, 0x0020)
-        # self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
-        # self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
-        # Set GRAM area
-        # self.set_register(ILI9225_GATE_SCAN_CTRL, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL1, 0x00DB)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL2, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL3, 0x0000)
-        # self.set_register(ILI9225_PARTIAL_DRIVING_POS1, 0x00DB)
-        # self.set_register(ILI9225_PARTIAL_DRIVING_POS2, 0x0000)
-        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, 0x00AF)
-        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, 0x0000)
-        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, 0x00DB)
-        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, 0x0000)
-        # Set GAMMA curve
-        # self.set_register(ILI9225_GAMMA_CTRL1, 0x0000)
-        # self.set_register(ILI9225_GAMMA_CTRL2, 0x0808)
-        # self.set_register(ILI9225_GAMMA_CTRL3, 0x080A)
-        # self.set_register(ILI9225_GAMMA_CTRL4, 0x000A)
-        # self.set_register(ILI9225_GAMMA_CTRL5, 0x0A08)
-        # self.set_register(ILI9225_GAMMA_CTRL6, 0x0808)
-        # self.set_register(ILI9225_GAMMA_CTRL7, 0x0000)
-        # self.set_register(ILI9225_GAMMA_CTRL8, 0x0A00)
-        # self.set_register(ILI9225_GAMMA_CTRL9, 0x0710)
-        # self.set_register(ILI9225_GAMMA_CTRL10, 0x0710)
-        # self.set_register(ILI9225_DISP_CTRL1, 0x0012)
         short_delay()
         self.set_register(ILI9225_DISP_CTRL1, 0x1017)
 
@@ -170,6 +145,8 @@ class ILI9225:
             return (y, x)
         elif self.rotation == 1:
             return (x, ILI9225_WIDTH - y - 1)
+        elif self.rotation == 2:
+            return (ILI9225_HEIGHT - y - 1, ILI9225_WIDTH - x - 1)
         elif self.rotation == 3:
             return (ILI9225_HEIGHT - x - 1, y)
 
@@ -192,6 +169,11 @@ class ILI9225:
             self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, startAddrHi)
             self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, startAddrLo)
             self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, endAddrHi)
+        if self.rotation == 2:
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, endAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, endAddrHi)
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, startAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, startAddrHi)
         elif self.rotation == 3:
             self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, startAddrLo)
             self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, endAddrHi)

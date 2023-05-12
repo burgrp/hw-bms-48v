@@ -12,7 +12,7 @@ import site_config
 
 spi = SPI(1, baudrate=400000, polarity=0, phase=0, sck=Pin(site_config.dispSckPin), mosi=Pin(site_config.dispMosiPin), miso=Pin(site_config.dispMisoPin))
 
-display = ili9225.ILI9225(spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin, rotation=1)
+display = ili9225.ILI9225(spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin, rotation=2)
 display.clear()
 
 red = 0xFF0000
