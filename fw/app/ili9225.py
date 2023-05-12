@@ -69,6 +69,8 @@ class ILI9225:
 
     def __init__(self, spi, ss_pin, rs_pin, rst_pin, rotation=0):
 
+        self.buffer = None
+
         self.rotation = rotation
 
         if rotation == 0 or rotation == 2:
@@ -187,12 +189,17 @@ class ILI9225:
     def window_end(self):
         self.tx_end()
 
+    def get_buffer(self, size):
+        if self.buffer == None or len(self.buffer) < size:
+            print("Allocating buffer of size", size)
+            self.buffer = bytearray(size)
+        return memoryview(self.buffer)[:size]
 
     def bitmap(self, bitmap, x, y, width, height, fg_color = COLOR_WHITE, bg_color = COLOR_BLACK):
 
         self.window_begin(x, y, width, height)
 
-        buffer = bytearray(2 * width * height)
+        buffer = self.get_buffer(2 * width * height)
 
         (fg_color0, fg_color1) = convert_rgb(fg_color)
         (bg_color0, bg_color1) = convert_rgb(bg_color)
@@ -252,18 +259,18 @@ class ILI9225:
         (color0, color1) = convert_rgb(color)
 
         count = 2 * width * height
-        buffer_len = min(count, 4096)
-        buffer = bytearray(buffer_len)
+        buffer_size = min(count, 4096)
+        buffer = self.get_buffer(buffer_size)
 
-        for i in range(buffer_len // 2):
+        for i in range(buffer_size // 2):
             buffer[2*i] = color0
             buffer[2*i + 1] = color1
 
         while count > 0:
-            if count < buffer_len:
+            if count < buffer_size:
                 buffer = memoryview(buffer)[:count]
             self.spi.write(buffer)
-            count -= buffer_len
+            count -= buffer_size
             self.spi.write(buffer)
 
         self.window_end()

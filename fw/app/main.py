@@ -83,3 +83,4 @@ while True:
     display.update(voltage.value, current.value, temp.value)
 
     gc.collect()
+    print('Free RAM:', gc.mem_free())
