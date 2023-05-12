@@ -49,8 +49,12 @@ ILI9225_GAMMA_CTRL10=const(0x59)  # Gamma Control 10
 ILI9225_WIDTH=const(176)
 ILI9225_HEIGHT=const(220)
 
-BLACK = const(0x000000)
-WHITE = const(0xFFFFFF)
+COLOR_BLACK = const(0x000000)
+COLOR_WHITE = const(0xFFFFFF)
+
+ALIGN_LEFT = const(0)
+ALIGN_CENTER = const(1)
+ALIGN_RIGHT = const(2)
 
 def short_delay():
     utime.sleep_ms(50)
@@ -172,7 +176,7 @@ class ILI9225():
         self.tx_end()
 
 
-    def bitmap(self, bitmap, x, y, width, height, fg_color = WHITE, bg_color = BLACK):
+    def bitmap(self, bitmap, x, y, width, height, fg_color = COLOR_WHITE, bg_color = COLOR_BLACK):
 
         self.window_begin(x, y, width, height)
 
@@ -200,11 +204,11 @@ class ILI9225():
 
         self.window_end()
 
-    def print(self, text, x, y, font, fg_color = WHITE, bg_color = BLACK):
-        (bitmap, height, width) = font.get_ch(text)
-        self.bitmap(bitmap, x, y, width, height, fg_color, bg_color)
+    def print(self, text, x, y, char_width, font, fg_color = COLOR_WHITE, bg_color = COLOR_BLACK, align = ALIGN_LEFT, width = None):
+        (char_bitmap, char_height, char_width) = font.get_ch(text)
+        self.bitmap(char_bitmap, x, y, char_width, char_height, fg_color, bg_color)
 
-    def fill_rect(self, x, y, width, height, color = WHITE):
+    def fill_rect(self, x, y, width, height, color = COLOR_WHITE):
 
         self.window_begin(x, y, width, height)
 
@@ -227,12 +231,12 @@ class ILI9225():
 
         self.window_end()
 
-    def hline(self, x, y, width, color = WHITE):
+    def hline(self, x, y, width, color = COLOR_WHITE):
         self.fill_rect(x, y, width, 1, color)
 
-    def vline(self, x, y, height, color = WHITE):
+    def vline(self, x, y, height, color = COLOR_WHITE):
         self.fill_rect(x, y, 1, height, color)
 
-    def clear(self, color = BLACK):
+    def clear(self, color = COLOR_BLACK):
         self.fill_rect(0, 0, self.width, self.height, color)
 

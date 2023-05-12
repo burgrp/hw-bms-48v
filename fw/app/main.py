@@ -22,9 +22,9 @@ yellow = 0xFFFF00
 maroon = 0x800000
 white = 0xFFFFFF
 
-display.print('A', 10, 10, freesans20, red)
-display.print('B', 30, 10, freesans20, green)
-display.print('C', 50, 10, freesans20, blue, white)
+x = display.print('A', 10, 10, freesans20, red)
+display.print('B', x, 10, freesans20, green)
+display.print('C', x, 10, freesans20, blue, white, width=50)
 display.hline(10, 30, 100, green)
 display.vline(10, 30, 50, green)
 display.fill_rect(10, 100, 50, 100, yellow)
