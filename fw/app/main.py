@@ -3,7 +3,7 @@ import mqtt_reg
 import math
 from machine import ADC, SPI, Pin
 
-from ili9225 import ILI9225, Palette
+from ili9225 import ILI9225
 import freesans20
 
 import sys
@@ -11,22 +11,23 @@ sys.path.append('/')
 import site_config
 
 spi = SPI(1, baudrate=10000000, polarity=0, phase=0, sck=Pin(site_config.dispSckPin), mosi=Pin(site_config.dispMosiPin), miso=Pin(site_config.dispMisoPin))
-palette = Palette(4)
-palette.set_color(0, 0, 0, 0)
-palette.set_color(1, 0, 255, 50)
-palette.set_color(2, 255, 50, 0)
-palette.set_color(3, 255, 255, 255)
-palette.set_color(15, 0, 0, 255)
 
-display = ILI9225(palette, spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin)
+display = ILI9225(spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin)
 display.clear()
 
-display.print('A', 10, 10, freesans20, 3)
-display.print('B', 30, 10, freesans20, 2)
-display.print('C', 50, 10, freesans20, 3)
-display.hline(10, 30, 100, 2)
-display.vline(10, 30, 50, 2)
-display.fill_rect(10, 100, 50, 100, 15)
+red = 0xFF0000
+green = 0x00FF00
+blue = 0x0000FF
+yellow = 0xFFFF00
+maroon = 0x800000
+white = 0xFFFFFF
+
+display.print('A', 10, 10, freesans20, red)
+display.print('B', 30, 10, freesans20, green)
+display.print('C', 50, 10, freesans20, white)
+display.hline(10, 30, 100, green)
+display.vline(10, 30, 50, green)
+display.fill_rect(10, 100, 50, 100, yellow)
 
 
 # def ntc3950_resistance_to_temperature(resistance_ohm):

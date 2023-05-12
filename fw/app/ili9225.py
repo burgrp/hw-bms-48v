@@ -49,27 +49,24 @@ ILI9225_GAMMA_CTRL10=const(0x59)  # Gamma Control 10
 ILI9225_WIDTH=const(176)
 ILI9225_HEIGHT=const(220)
 
+BLACK = const(0x000000)
+WHITE = const(0xFFFFFF)
+
 def short_delay():
     utime.sleep_ms(50)
 
-class Palette:
-    def __init__(self, channel_bits):
-        self.channel_bits = channel_bits
-        self.palette = bytearray(2 << channel_bits)
-
-    def set_color(self, index, r, g, b):
-        # convert 8-bit RGB to 16-bit RGB565
-        self.palette[index * 2] = (r & 0xF8) | (g >> 5)
-        self.palette[index * 2 + 1] = ((g & 0x1C) << 3) | (b >> 3)
+def convert_rgb(rgb16):
+    r = (rgb16 >> 16) & 0xFF
+    g = (rgb16 >> 8) & 0xFF
+    b = rgb16 & 0xFF
+    return ((r & 0xF8) | (g >> 5), ((g & 0x1C) << 3) | (b >> 3))
 
 class ILI9225():
 
-    def __init__(self, palette, spi, ss_pin, rs_pin, rst_pin):
+    def __init__(self, spi, ss_pin, rs_pin, rst_pin):
 
         self.width = ILI9225_WIDTH
         self.height = ILI9225_HEIGHT
-
-        self.palette = palette
 
         self.spi = spi
 
@@ -175,48 +172,50 @@ class ILI9225():
         self.tx_end()
 
 
-    def bitmap(self, bitmap, x, y, width, height, color):
+    def bitmap(self, bitmap, x, y, width, height, color = WHITE):
 
         self.window_begin(x, y, width, height)
 
-        palette = self.palette.palette
+        buffer = bytearray(2 * width * height)
 
-        expanded = bytearray(2 * width * height)
+        (color0, color1) = convert_rgb(color)
 
         bit_offset = 0
         for y in range(height):
             for x in range(width):
+                buffer_index = 2 * (y * width + x)
                 pixel = (bitmap[bit_offset // 8] >> (7-(bit_offset % 8))) & 1
-                palette_index = 2*color*pixel
-                expanded_index = 2 * (y * width + x)
-                expanded[expanded_index] = palette[palette_index]
-                expanded[expanded_index + 1] = palette[palette_index + 1]
+                if pixel == 0:
+                    buffer[buffer_index] = 0
+                    buffer[buffer_index + 1] = 0
+                else:
+                    buffer[buffer_index] = color1
+                    buffer[buffer_index + 1] = color0
                 bit_offset += 1
             if bit_offset % 8 != 0:
                 bit_offset += 8 - (bit_offset % 8)
 
-        self.spi.write(expanded)
+        self.spi.write(buffer)
 
         self.window_end()
 
-    def print(self, text, x, y, font, color = 1):
+    def print(self, text, x, y, font, color = WHITE):
         (bitmap, height, width) = font.get_ch(text)
         self.bitmap(bitmap, x, y, width, height, color)
 
-    def fill_rect(self, x, y, width, height, color = 1):
+    def fill_rect(self, x, y, width, height, color = WHITE):
+
         self.window_begin(x, y, width, height)
 
-        palette_index = 2 * color
-        byte0 = self.palette.palette[palette_index]
-        byte1 = self.palette.palette[palette_index + 1]
+        (color0, color1) = convert_rgb(color)
 
         count = 2 * width * height
         buffer_len = min(count, 4096)
         buffer = bytearray(buffer_len)
 
         for i in range(buffer_len // 2):
-            buffer[2*i] = byte0
-            buffer[2*i + 1] = byte1
+            buffer[2*i] = color0
+            buffer[2*i + 1] = color1
 
         while count > 0:
             if count < buffer_len:
@@ -227,12 +226,12 @@ class ILI9225():
 
         self.window_end()
 
-    def hline(self, x, y, width, color = 1):
+    def hline(self, x, y, width, color = WHITE):
         self.fill_rect(x, y, width, 1, color)
 
-    def vline(self, x, y, height, color = 1):
+    def vline(self, x, y, height, color = WHITE):
         self.fill_rect(x, y, 1, height, color)
 
-    def clear(self, color = 0):
+    def clear(self, color = BLACK):
         self.fill_rect(0, 0, self.width, self.height, color)
 
