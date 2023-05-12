@@ -107,40 +107,40 @@ class ILI9225():
         short_delay()
         self.set_register(ILI9225_DRIVER_OUTPUT_CTRL, 0x011C)
         self.set_register(ILI9225_LCD_AC_DRIVING_CTRL, 0x0100)
-        self.set_register(ILI9225_ENTRY_MODE, 0x01030)
+        self.set_register(ILI9225_ENTRY_MODE, 0x01018)
         self.set_register(ILI9225_DISP_CTRL1, 0x0000)
         self.set_register(ILI9225_DISP_CTRL2, 0x0808)
         self.set_register(ILI9225_FRAME_CYCLE_CTRL, 0x1100)
         self.set_register(ILI9225_INTERFACE_CTRL, 0x0000)
         self.set_register(ILI9225_OSC_CTRL, 0x0D01)
         self.set_register(ILI9225_VCI_RECYCLING, 0x0020)
-        self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
-        self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
+        # self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
+        # self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
         # Set GRAM area
-        self.set_register(ILI9225_GATE_SCAN_CTRL, 0x0000)
-        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL1, 0x00DB)
-        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL2, 0x0000)
-        self.set_register(ILI9225_VERTICAL_SCROLL_CTRL3, 0x0000)
-        self.set_register(ILI9225_PARTIAL_DRIVING_POS1, 0x00DB)
-        self.set_register(ILI9225_PARTIAL_DRIVING_POS2, 0x0000)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, 0x00AF)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, 0x0000)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, 0x00DB)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, 0x0000)
+        # self.set_register(ILI9225_GATE_SCAN_CTRL, 0x0000)
+        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL1, 0x00DB)
+        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL2, 0x0000)
+        # self.set_register(ILI9225_VERTICAL_SCROLL_CTRL3, 0x0000)
+        # self.set_register(ILI9225_PARTIAL_DRIVING_POS1, 0x00DB)
+        # self.set_register(ILI9225_PARTIAL_DRIVING_POS2, 0x0000)
+        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, 0x00AF)
+        # self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, 0x0000)
+        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, 0x00DB)
+        # self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, 0x0000)
         # Set GAMMA curve
-        self.set_register(ILI9225_GAMMA_CTRL1, 0x0000)
-        self.set_register(ILI9225_GAMMA_CTRL2, 0x0808)
-        self.set_register(ILI9225_GAMMA_CTRL3, 0x080A)
-        self.set_register(ILI9225_GAMMA_CTRL4, 0x000A)
-        self.set_register(ILI9225_GAMMA_CTRL5, 0x0A08)
-        self.set_register(ILI9225_GAMMA_CTRL6, 0x0808)
-        self.set_register(ILI9225_GAMMA_CTRL7, 0x0000)
-        self.set_register(ILI9225_GAMMA_CTRL8, 0x0A00)
-        self.set_register(ILI9225_GAMMA_CTRL9, 0x0710)
-        self.set_register(ILI9225_GAMMA_CTRL10, 0x0710)
-        self.set_register(ILI9225_DISP_CTRL1, 0x0012)
+        # self.set_register(ILI9225_GAMMA_CTRL1, 0x0000)
+        # self.set_register(ILI9225_GAMMA_CTRL2, 0x0808)
+        # self.set_register(ILI9225_GAMMA_CTRL3, 0x080A)
+        # self.set_register(ILI9225_GAMMA_CTRL4, 0x000A)
+        # self.set_register(ILI9225_GAMMA_CTRL5, 0x0A08)
+        # self.set_register(ILI9225_GAMMA_CTRL6, 0x0808)
+        # self.set_register(ILI9225_GAMMA_CTRL7, 0x0000)
+        # self.set_register(ILI9225_GAMMA_CTRL8, 0x0A00)
+        # self.set_register(ILI9225_GAMMA_CTRL9, 0x0710)
+        # self.set_register(ILI9225_GAMMA_CTRL10, 0x0710)
+        # self.set_register(ILI9225_DISP_CTRL1, 0x0012)
         short_delay()
-        self.set_register(ILI9225_DISP_CTRL1, 0x1017);
+        self.set_register(ILI9225_DISP_CTRL1, 0x1017)
 
         self.tx_end()
 
@@ -158,15 +158,25 @@ class ILI9225():
     def tx_end(self):
         self.ss.value(1)
 
+    # returns address as (hi, lo) tuple
+    def address(self, x, y):
+        return (ILI9225_HEIGHT - x - 1, y)
+
+
     def window_begin(self, x, y, width, height):
         self.tx_begin()
 
-        self.set_register(ILI9225_RAM_ADDR_SET1, x)
-        self.set_register(ILI9225_RAM_ADDR_SET2, y)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x + width -1)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, x)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y + height - 1)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, y)
+        (startAddrHi, startAddrLo) = self.address(x, y)
+        (endAddrHi, endAddrLo) = self.address(x + width -1, y + height - 1)
+
+        self.set_register(ILI9225_RAM_ADDR_SET1, startAddrLo)
+        self.set_register(ILI9225_RAM_ADDR_SET2, startAddrHi)
+
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, startAddrLo)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, endAddrHi)
+
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, endAddrLo)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, startAddrHi)
 
         self.rs.value(0)
         self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
