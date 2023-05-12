@@ -3,6 +3,8 @@ from micropython import const
 import utime
 import framebuf
 
+# https://www.displayfuture.com/Display/datasheet/controller/ILI9225.pdf
+
 # Register definitions
 
 # Control registers
@@ -60,7 +62,7 @@ class Palette:
         self.palette[index * 2] = (r & 0xF8) | (g >> 5)
         self.palette[index * 2 + 1] = ((g & 0x1C) << 3) | (b >> 3)
 
-class ILI9225(framebuf.FrameBuffer):
+class ILI9225():
 
     def __init__(self, palette, spi, ss_pin, rs_pin, rst_pin):
 
@@ -68,16 +70,6 @@ class ILI9225(framebuf.FrameBuffer):
         self.height = ILI9225_HEIGHT
 
         self.palette = palette
-
-        mode = framebuf.GS8 if palette.channel_bits == 8 \
-            else framebuf.GS4_HMSB if palette.channel_bits == 4 \
-            else framebuf.GS2_HMSB if palette.channel_bits == 2 \
-            else framebuf.MONO_HLSB
-
-        buffer_size = ILI9225_WIDTH * ILI9225_HEIGHT // 8 * palette.channel_bits
-
-        super().__init__(bytearray(buffer_size), ILI9225_WIDTH, ILI9225_HEIGHT, mode)
-        self.second_buffer = framebuf.FrameBuffer(bytearray(buffer_size), ILI9225_WIDTH, ILI9225_HEIGHT, mode)
 
         self.spi = spi
 
@@ -165,76 +157,82 @@ class ILI9225(framebuf.FrameBuffer):
     def tx_end(self):
         self.ss.value(1)
 
-    # refresh the screen with the contents of self buffer
-    # x1, y1, x2, y2 define the rectangle to refresh all inclusive
-    def refresh(self, x1, y1, x2, y2):
-        if x1 < 0 or y1 < 0 or x2 > self.width or y2 > self.height or x1 > x2 or y1 > y2:
-            return
-
+    def window_begin(self, x, y, width, height):
         self.tx_begin()
 
-        self.set_register(ILI9225_RAM_ADDR_SET1, 0x0000)
-        self.set_register(ILI9225_RAM_ADDR_SET2, 0x0000)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x2)
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, x1)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y2)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, y1)
+        self.set_register(ILI9225_RAM_ADDR_SET1, x)
+        self.set_register(ILI9225_RAM_ADDR_SET2, y)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, x + width -1)
+        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, x)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, y + height - 1)
+        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, y)
 
         self.rs.value(0)
         self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))
         self.rs.value(1)
 
-        palette = self.palette.palette
-
-        width = x2 - x1 + 1
-        height = y2 - y1 + 1
-        line_count = min(max(2000 // width, 1), height)
-        line_count = 1
-        lines = bytearray(width * 2 * line_count)
-        for y in range(0, height, line_count):
-            lc = min(line_count, height - y)
-            for l in range(0, lc):
-                line_offset = l * width * 2
-                for x in range(0, width):
-                    rx = x + x1
-                    ry = y + y1 + l
-                    color = self.pixel(rx, ry)
-                    self.second_buffer.pixel(rx, ry, color)
-                    offset = line_offset + x * 2
-                    lines[offset] = palette[color * 2]
-                    lines[offset + 1] = palette[color * 2 + 1]
-
-            if lc < line_count:
-                self.spi.write(memoryview(lines)[:lc * width * 2])
-            else:
-                self.spi.write(lines)
-
+    def window_end(self):
         self.tx_end()
 
-    def find_dirty(self):
 
-        # find first dirty pixel area
+    def bitmap(self, bitmap, x, y, width, height, color):
 
-        x1 = y1 = x2 = y2 = None
-        for y in range(self.height):
-            for x in range(self.width):
-                if self.pixel(x, y) != self.second_buffer.pixel(x, y):
-                    if x1 is None:
-                        x1 = x2 = x
-                        y1 = y2 = y
-                    else:
-                        x1 = min(x1, x)
-                        y1 = min(y1, y)
-                        x2 = max(x2, x)
-                        y2 = max(y2, y)
+        self.window_begin(x, y, width, height)
 
-        return (x1, y1, x2, y2) if x1 is not None else None
+        palette = self.palette.palette
 
+        expanded = bytearray(2 * width * height)
 
-    def show(self):
-        self.refresh(75, 100, 122, 206)
-        dirty = self.find_dirty()
-        if dirty:
-            x1, y1, x2, y2 = dirty
-            print("refresh", x1, y1, x2, y2)
-            self.refresh(x1, y1, x2, y2)
+        bit_offset = 0
+        for y in range(height):
+            for x in range(width):
+                pixel = (bitmap[bit_offset // 8] >> (7-(bit_offset % 8))) & 1
+                palette_index = 2*color*pixel
+                expanded_index = 2 * (y * width + x)
+                expanded[expanded_index] = palette[palette_index]
+                expanded[expanded_index + 1] = palette[palette_index + 1]
+                bit_offset += 1
+            if bit_offset % 8 != 0:
+                bit_offset += 8 - (bit_offset % 8)
+
+        self.spi.write(expanded)
+
+        self.window_end()
+
+    def print(self, text, x, y, font, color = 1):
+        (bitmap, height, width) = font.get_ch(text)
+        self.bitmap(bitmap, x, y, width, height, color)
+
+    def fill_rect(self, x, y, width, height, color = 1):
+        self.window_begin(x, y, width, height)
+
+        palette_index = 2 * color
+        byte0 = self.palette.palette[palette_index]
+        byte1 = self.palette.palette[palette_index + 1]
+
+        count = 2 * width * height
+        buffer_len = min(count, 4096)
+        buffer = bytearray(buffer_len)
+
+        for i in range(buffer_len // 2):
+            buffer[2*i] = byte0
+            buffer[2*i + 1] = byte1
+
+        while count > 0:
+            if count < buffer_len:
+                buffer = memoryview(buffer)[:count]
+            self.spi.write(buffer)
+            count -= buffer_len
+            self.spi.write(buffer)
+
+        self.window_end()
+
+    def hline(self, x, y, width, color = 1):
+        self.fill_rect(x, y, width, 1, color)
+
+    def vline(self, x, y, height, color = 1):
+        self.fill_rect(x, y, 1, height, color)
+
+    def clear(self, color = 0):
+        self.fill_rect(0, 0, self.width, self.height, color)
+
