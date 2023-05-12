@@ -24,7 +24,7 @@ white = 0xFFFFFF
 
 display.print('A', 10, 10, freesans20, red)
 display.print('B', 30, 10, freesans20, green)
-display.print('C', 50, 10, freesans20, white)
+display.print('C', 50, 10, freesans20, blue, white)
 display.hline(10, 30, 100, green)
 display.vline(10, 30, 50, green)
 display.fill_rect(10, 100, 50, 100, yellow)

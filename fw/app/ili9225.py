@@ -172,13 +172,14 @@ class ILI9225():
         self.tx_end()
 
 
-    def bitmap(self, bitmap, x, y, width, height, color = WHITE):
+    def bitmap(self, bitmap, x, y, width, height, fg_color = WHITE, bg_color = BLACK):
 
         self.window_begin(x, y, width, height)
 
         buffer = bytearray(2 * width * height)
 
-        (color0, color1) = convert_rgb(color)
+        (fg_color0, fg_color1) = convert_rgb(fg_color)
+        (bg_color0, bg_color1) = convert_rgb(bg_color)
 
         bit_offset = 0
         for y in range(height):
@@ -186,11 +187,11 @@ class ILI9225():
                 buffer_index = 2 * (y * width + x)
                 pixel = (bitmap[bit_offset // 8] >> (7-(bit_offset % 8))) & 1
                 if pixel == 0:
-                    buffer[buffer_index] = 0
-                    buffer[buffer_index + 1] = 0
+                    buffer[buffer_index] = bg_color0
+                    buffer[buffer_index + 1] = bg_color1
                 else:
-                    buffer[buffer_index] = color1
-                    buffer[buffer_index + 1] = color0
+                    buffer[buffer_index] = fg_color0
+                    buffer[buffer_index + 1] = fg_color1
                 bit_offset += 1
             if bit_offset % 8 != 0:
                 bit_offset += 8 - (bit_offset % 8)
@@ -199,9 +200,9 @@ class ILI9225():
 
         self.window_end()
 
-    def print(self, text, x, y, font, color = WHITE):
+    def print(self, text, x, y, font, fg_color = WHITE, bg_color = BLACK):
         (bitmap, height, width) = font.get_ch(text)
-        self.bitmap(bitmap, x, y, width, height, color)
+        self.bitmap(bitmap, x, y, width, height, fg_color, bg_color)
 
     def fill_rect(self, x, y, width, height, color = WHITE):
 
