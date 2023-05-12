@@ -65,12 +65,18 @@ def convert_rgb(rgb16):
     b = rgb16 & 0xFF
     return ((r & 0xF8) | (g >> 5), ((g & 0x1C) << 3) | (b >> 3))
 
-class ILI9225():
+class ILI9225:
 
-    def __init__(self, spi, ss_pin, rs_pin, rst_pin):
+    def __init__(self, spi, ss_pin, rs_pin, rst_pin, rotation=0):
 
-        self.width = ILI9225_WIDTH
-        self.height = ILI9225_HEIGHT
+        self.rotation = rotation
+
+        if rotation == 0 or rotation == 2:
+            self.width = ILI9225_WIDTH
+            self.height = ILI9225_HEIGHT
+        else:
+            self.width = ILI9225_HEIGHT
+            self.height = ILI9225_WIDTH
 
         self.spi = spi
 
@@ -107,7 +113,7 @@ class ILI9225():
         short_delay()
         self.set_register(ILI9225_DRIVER_OUTPUT_CTRL, 0x011C)
         self.set_register(ILI9225_LCD_AC_DRIVING_CTRL, 0x0100)
-        self.set_register(ILI9225_ENTRY_MODE, 0x01018)
+        self.set_register(ILI9225_ENTRY_MODE, [0x1030, 0x1028, 0, 0x1018][self.rotation])
         self.set_register(ILI9225_DISP_CTRL1, 0x0000)
         self.set_register(ILI9225_DISP_CTRL2, 0x0808)
         self.set_register(ILI9225_FRAME_CYCLE_CTRL, 0x1100)
@@ -160,8 +166,12 @@ class ILI9225():
 
     # returns address as (hi, lo) tuple
     def address(self, x, y):
-        return (ILI9225_HEIGHT - x - 1, y)
-
+        if self.rotation == 0:
+            return (y, x)
+        elif self.rotation == 1:
+            return (x, ILI9225_WIDTH - y - 1)
+        elif self.rotation == 3:
+            return (ILI9225_HEIGHT - x - 1, y)
 
     def window_begin(self, x, y, width, height):
         self.tx_begin()
@@ -172,11 +182,21 @@ class ILI9225():
         self.set_register(ILI9225_RAM_ADDR_SET1, startAddrLo)
         self.set_register(ILI9225_RAM_ADDR_SET2, startAddrHi)
 
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, startAddrLo)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, endAddrHi)
-
-        self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, endAddrLo)
-        self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, startAddrHi)
+        if self.rotation == 0:
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, startAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, startAddrHi)
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, endAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, endAddrHi)
+        elif self.rotation == 1:
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, endAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, startAddrHi)
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, startAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, endAddrHi)
+        elif self.rotation == 3:
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR2, startAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR2, endAddrHi)
+            self.set_register(ILI9225_HORIZONTAL_WINDOW_ADDR1, endAddrLo)
+            self.set_register(ILI9225_VERTICAL_WINDOW_ADDR1, startAddrHi)
 
         self.rs.value(0)
         self.spi.write(bytes([ILI9225_GRAM_DATA_REG]))

@@ -10,9 +10,9 @@ import sys
 sys.path.append('/')
 import site_config
 
-spi = SPI(1, baudrate=40000000, polarity=0, phase=0, sck=Pin(site_config.dispSckPin), mosi=Pin(site_config.dispMosiPin), miso=Pin(site_config.dispMisoPin))
+spi = SPI(1, baudrate=400000, polarity=0, phase=0, sck=Pin(site_config.dispSckPin), mosi=Pin(site_config.dispMosiPin), miso=Pin(site_config.dispMisoPin))
 
-display = ili9225.ILI9225(spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin)
+display = ili9225.ILI9225(spi, site_config.dispSsPin, site_config.dispRsPin, site_config.dispRstPin, rotation=1)
 display.clear()
 
 red = 0xFF0000
@@ -23,7 +23,9 @@ maroon = 0x800000
 white = 0xFFFFFF
 
 display.hline(0, 0, display.width, green)
+display.hline(0, display.height-1, display.width, red)
 display.vline(0, 0, display.height, green)
+display.vline(display.width-1, 0, display.height, red)
 display.fill_rect(10, 100, 50, 50, yellow)
 
 x = display.print('Ahoj! ', 10, 10, freesans20, red)
