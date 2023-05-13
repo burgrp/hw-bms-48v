@@ -10,6 +10,9 @@ import sys
 sys.path.append('/')
 import site_config
 
+# disable LED
+Pin(site_config.pinLed, Pin.OUT).value(0)
+
 display = Display(site_config)
 
 def ntc3950_resistance_to_temperature(resistance_ohm):
@@ -28,12 +31,18 @@ current = mqtt_reg.ServerReadOnlyRegister(
 temp = mqtt_reg.ServerReadOnlyRegister(
     site_config.name + '.temp', {'device': site_config.name, 'unit': '°C', 'type': 'number'})
 
+online = False
+
+def online_cb(ol):
+    global online
+    online = ol
+
 registry = mqtt_reg.Registry(
     server=[voltage, current, temp],
     wifi_ssid=site_config.wifi_ssid,
     wifi_password=site_config.wifi_password,
     mqtt_broker=site_config.mqtt_broker,
-    ledPin=site_config.pinLed,
+    online_cb=online_cb,
     debug=site_config.debug
 )
 
@@ -52,7 +61,7 @@ while True:
         if not value is None:
             value = round(value, 1)
             if not reg.value is None:
-                value = round((value + reg.value) / 2, 1)
+                value = round((value + 2 * reg.value) / 3, 1)
         print(reg.name, value, reg.meta['unit'])
         reg.set_value_local(value)
 
@@ -66,6 +75,8 @@ while True:
     current_adc_uV = adcCurrent.read_uv() - site_config.adcOffset
     current_div_uV = current_adc_uV * (27000 + 100000) / 100000
     current_Amps = site_config.currentProbeAmps * (current_div_uV - 2500000) / 625000
+    if current_Amps < 700:
+        current_Amps = None
     updateReg(current, current_Amps)
 
     # read temperature
@@ -80,7 +91,7 @@ while True:
 
     # update display
 
-    display.update(voltage.value, current.value, temp.value)
+    display.update(voltage, current, temp, online)
 
     gc.collect()
     print('Free RAM:', gc.mem_free())

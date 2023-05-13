@@ -30,3 +30,6 @@ freeze: ## Builds and flashes frozen application
 
 flash: ## Flashes last build (vanilla or freeze)
 	podman exec -it ${CONTAINER_NAME} make FROZEN_MANIFEST=/project/manifest.py deploy
+
+font: ## Genereates font file from ttf
+	sub/micropython-font-to-py/font_to_py.py Exo2-SemiBold.ttf 35 -x -c "0123456789(noe). °CVA" app/font.py
