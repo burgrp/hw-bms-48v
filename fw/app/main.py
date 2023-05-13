@@ -75,7 +75,7 @@ while True:
     current_adc_uV = adcCurrent.read_uv() - site_config.adcOffset
     current_div_uV = current_adc_uV * (27000 + 100000) / 100000
     current_Amps = site_config.currentProbeAmps * (current_div_uV - 2500000) / 625000
-    if current_Amps < 700:
+    if current_Amps < -500:
         current_Amps = None
     updateReg(current, current_Amps)
 
