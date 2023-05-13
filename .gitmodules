@@ -7,3 +7,6 @@
 [submodule "fw/sub/micropython-font-to-py"]
 	path = fw/sub/micropython-font-to-py
 	url = https://github.com/peterhinch/micropython-font-to-py.git
+[submodule "fw/sub/micropython-ili9225"]
+	path = fw/sub/micropython-ili9225
+	url = git@github.com:burgrp/micropython-ili9225.git

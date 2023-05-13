@@ -1,5 +1,4 @@
 import ili9225
-#import freesans20 as font
 import font
 
 from machine import SPI, Pin
